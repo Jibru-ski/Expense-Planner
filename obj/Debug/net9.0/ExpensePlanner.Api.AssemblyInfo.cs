@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ExpensePlanner.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a28ffff119ce39f30dc80b44a13181859a819797")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb4502b799f41286796a9c1f7831528055184e68")]
 [assembly: System.Reflection.AssemblyProductAttribute("ExpensePlanner.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ExpensePlanner.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
