@@ -21,16 +21,16 @@ namespace ExpensePlanner.Api.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            var users = await _context.Users
-                .Include(u => u.Accounts)
-                .Include(u => u.Transactions)
-                .ToListAsync();
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        // {
+        //     var users = await _context.Users
+        //         .Include(u => u.Accounts)
+        //         .Include(u => u.Transactions)
+        //         .ToListAsync();
 
-            return Ok(users);
-        }
+        //     return Ok(users);
+        // }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
@@ -47,19 +47,19 @@ namespace ExpensePlanner.Api.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(User user)
-        {
-            if (user == null)
-            {
-                return BadRequest("User cannot be null.");
-            }
+        // [HttpPost]
+        // public async Task<ActionResult<User>> CreateUser(User user)
+        // {
+        //     if (user == null)
+        //     {
+        //         return BadRequest("User cannot be null.");
+        //     }
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+        //     _context.Users.Add(user);
+        //     await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
-        }
+        //     return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+        // }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, User user)
@@ -100,6 +100,6 @@ namespace ExpensePlanner.Api.Controllers
             return NoContent();
         }
 
-        
+
     }
 }
