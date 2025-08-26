@@ -283,3 +283,4 @@ C:\Users\barak\Desktop\projects\ExpensePlanner\ExpensePlanner.Api\bin\Debug\net9
 C:\Users\barak\Desktop\projects\ExpensePlanner\ExpensePlanner.Api\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\barak\Desktop\projects\ExpensePlanner\ExpensePlanner.Api\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\barak\Desktop\projects\ExpensePlanner\ExpensePlanner.Api\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
+C:\Users\barak\Desktop\projects\ExpensePlanner\ExpensePlanner.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
