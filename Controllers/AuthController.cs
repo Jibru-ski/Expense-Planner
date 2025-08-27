@@ -25,7 +25,7 @@ namespace ExpensePlanner.Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto dto)
         {
-            if (_context.Users.Any(u => u.UserName == dto.UserName))
+            if (await _context.Users.AnyAsync(u => u.UserName == dto.UserName))
             {
                 return BadRequest("Username already exists.");
             }

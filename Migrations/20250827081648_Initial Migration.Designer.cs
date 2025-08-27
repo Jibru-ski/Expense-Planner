@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpensePlanner.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250826091257_Initial Migration")]
+    [Migration("20250827081648_Initial Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
