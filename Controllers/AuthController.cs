@@ -6,6 +6,7 @@ using ExpensePlanner.Api.Data;
 using ExpensePlanner.Api.Dtos;
 using ExpensePlanner.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpensePlanner.Api.Controllers
 {
@@ -22,9 +23,9 @@ namespace ExpensePlanner.Api.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserRegistrationDto dto)
+        public async Task<IActionResult> Register([FromBody] UserRegistrationDto dto)
         {
-            if (_context.Users.Any(u => u.Name == dto.Name))
+            if (_context.Users.Any(u => u.UserName == dto.UserName))
             {
                 return BadRequest("Username already exists.");
             }
@@ -32,18 +33,18 @@ namespace ExpensePlanner.Api.Controllers
             // Map DTO to User entity
             var user = new User
             {
-                Name = dto.Name,
+                UserName = dto.UserName,
                 Email = dto.Email,
-                PasswordHash = HashPassword(dto.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
 
             var UserDto = new UserDto
             {
                 UserId = user.UserId,
-                Name = user.Name,
+                UserName = user.UserName,
                 Email = user.Email,
                 CreatedAt = user.CreatedAt
             };
@@ -52,10 +53,10 @@ namespace ExpensePlanner.Api.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLoginDto dto)
+        public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Name == dto.Name);
-            if (user == null || !VerifyPassword(dto.Password, user.PasswordHash))
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == dto.UserName);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid username or password.");
             }
@@ -64,26 +65,15 @@ namespace ExpensePlanner.Api.Controllers
             
             return Ok(new
             {
-                token = token,
+                token,
                 user = new UserDto
                 {
                     UserId = user.UserId,
-                    Name = user.Name,
+                    UserName = user.UserName,
                     Email = user.Email,
                     CreatedAt = user.CreatedAt
                 }
             });
-        }
-
-        private string HashPassword(string password)
-        {
-            // Use BCrypt
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
-        }
-        
-        private bool VerifyPassword(string enteredPassword, string storedHash)
-        {
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(enteredPassword)) == storedHash;
         }
 
         private string GenerateJwtToken(User user)
@@ -94,7 +84,7 @@ namespace ExpensePlanner.Api.Controllers
 
             var claims = new List<System.Security.Claims.Claim>
             {
-                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, user.Name),
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, user.UserName),
                 new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 

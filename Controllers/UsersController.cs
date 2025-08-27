@@ -75,7 +75,7 @@ namespace ExpensePlanner.Api.Controllers
                 return NotFound();
             }
 
-            existingUser.Name = user.Name;
+            existingUser.UserName = user.UserName;
             existingUser.Email = user.Email;
             existingUser.PasswordHash = user.PasswordHash;
 
