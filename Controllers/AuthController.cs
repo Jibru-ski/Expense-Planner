@@ -33,6 +33,8 @@ namespace ExpensePlanner.Api.Controllers
             // Map DTO to User entity
             var user = new User
             {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
                 UserName = dto.UserName,
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
@@ -44,6 +46,8 @@ namespace ExpensePlanner.Api.Controllers
             var UserDto = new UserDto
             {
                 UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
                 CreatedAt = user.CreatedAt
@@ -69,6 +73,8 @@ namespace ExpensePlanner.Api.Controllers
                 user = new UserDto
                 {
                     UserId = user.UserId,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
                     UserName = user.UserName,
                     Email = user.Email,
                     CreatedAt = user.CreatedAt
