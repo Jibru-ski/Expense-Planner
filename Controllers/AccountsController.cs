@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExpensePlanner.Api.Data;
 using ExpensePlanner.Api.Models;
+using ExpensePlanner.Api.Dtos.Account;
 
 namespace ExpensePlanner.Api.Controllers
 {
@@ -28,18 +29,33 @@ namespace ExpensePlanner.Api.Controllers
             return await _context.Accounts.ToListAsync();
         }
 
-        // GET: api/Accounts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(int id)
+        [HttpGet("{id}/summary")]
+        public async Task<ActionResult<AccountSummaryDto>> GetAccountSummary(int id)
         {
-            var account = await _context.Accounts.FindAsync(id);
+            var account = await _context.Accounts
+                .Include(a => a.Transactions)
+                .FirstOrDefaultAsync(i => i.AccountId == id);
 
             if (account == null)
             {
                 return NotFound();
             }
 
-            return account;
+            var summary = new AccountSummaryDto
+            {
+                AccountId = account.AccountId,
+                Name = account.Name,
+                TotalExpense = account.Transactions
+                    .Where(t => t.Type == TransactionType.Expense)
+                    .Sum(i => i.Amount),
+                TotalIncome = account.Transactions
+                    .Where(t => t.Type == TransactionType.Income)
+                    .Sum(i => i.Amount)
+            };
+
+            summary.Balance = summary.TotalIncome - summary.TotalExpense;
+
+            return Ok(summary);
         }
 
         // PUT: api/Accounts/5

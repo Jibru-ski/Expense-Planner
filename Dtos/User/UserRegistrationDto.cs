@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpensePlanner.Api.Dtos
+namespace ExpensePlanner.Api.Dtos.User
 {
     public class UserRegistrationDto
     {

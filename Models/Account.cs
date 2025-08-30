@@ -13,6 +13,10 @@ namespace ExpensePlanner.Api.Models
         public string Name { get; set; } = string.Empty;
 
         [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalExpense { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalIncome { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Balance { get; set; }
 
         public User User { get; set; } = null!; // Navigation property to User
