@@ -24,38 +24,49 @@ namespace ExpensePlanner.Api.Controllers
 
         // GET: api/Accounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
+        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts(int id)
         {
-            return await _context.Accounts.ToListAsync();
+            var accounts = await _context.Accounts
+                .Where(a => a.UserId == id)
+                .ToListAsync();
+
+            return Ok(accounts);
         }
 
-        [HttpGet("{id}/summary")]
+        [HttpGet("summary/{id}")]
         public async Task<ActionResult<AccountSummaryDto>> GetAccountSummary(int id)
         {
-            var account = await _context.Accounts
+            var accounts = await _context.Accounts
                 .Include(a => a.Transactions)
-                .FirstOrDefaultAsync(i => i.AccountId == id);
+                .ToListAsync();
 
-            if (account == null)
+            if (!accounts.Any())
             {
                 return NotFound();
             }
 
-            var summary = new AccountSummaryDto
+            var summaries = accounts.Select(a =>
             {
-                AccountId = account.AccountId,
-                Name = account.Name,
-                TotalExpense = account.Transactions
-                    .Where(t => t.Type == TransactionType.Expense)
-                    .Sum(i => i.Amount),
-                TotalIncome = account.Transactions
-                    .Where(t => t.Type == TransactionType.Income)
-                    .Sum(i => i.Amount)
-            };
+                var totalExpense = a.Transactions
+                        .Where(t => t.Type == TransactionType.Expense)
+                        .Sum(i => i.Amount);
 
-            summary.Balance = summary.TotalIncome - summary.TotalExpense;
+                var totalIncome = a.Transactions
+                        .Where(t => t.Type == TransactionType.Income)
+                        .Sum(i => i.Amount);
 
-            return Ok(summary);
+                return new AccountSummaryDto
+                {
+                    AccountId = a.AccountId,
+                    Name = a.Name,
+                    TotalExpense = totalExpense,
+                    TotalIncome = totalIncome,
+                    Balance = totalIncome - totalExpense
+
+                };
+            }).ToList();
+
+            return Ok(summaries);
         }
 
         // PUT: api/Accounts/5

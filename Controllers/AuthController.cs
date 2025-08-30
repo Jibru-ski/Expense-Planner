@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExpensePlanner.Api.Data;
-using ExpensePlanner.Api.Dtos;
+using ExpensePlanner.Api.Dtos.User;
 using ExpensePlanner.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +30,7 @@ namespace ExpensePlanner.Api.Controllers
                 return BadRequest("Username already exists.");
             }
 
+
             // Map DTO to User entity
             var user = new User
             {
@@ -40,6 +41,16 @@ namespace ExpensePlanner.Api.Controllers
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
+            //Create a default account
+            var account = new Account
+            {
+                UserId = user.UserId,
+                Name = "Primary Account",
+                TotalExpense = 0,
+                TotalIncome = 0,
+                Balance = 0
+            };
+            
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
