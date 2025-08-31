@@ -50,11 +50,13 @@ namespace ExpensePlanner.Api.Controllers
             {
                 UserId = user.UserId,
                 Name = "Primary Account",
+                Type = "Bank",
+                IsActive = true,
                 TotalExpense = 0,
                 TotalIncome = 0,
                 Balance = 0
             };
-            
+
             await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
 

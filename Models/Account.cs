@@ -11,6 +11,8 @@ namespace ExpensePlanner.Api.Models
         public int AccountId { get; set; }
         public int UserId { get; set; } // Foreign key to User
         public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public bool IsActive  { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalExpense { get; set; }

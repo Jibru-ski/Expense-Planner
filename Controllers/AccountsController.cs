@@ -49,6 +49,8 @@ namespace ExpensePlanner.Api.Controllers
                 {
                     AccountId = a.AccountId,
                     Name = a.Name,
+                    IsActive = a.IsActive,
+                    Type = a.Type,
                     TotalExpense = totalExpense,
                     TotalIncome = totalIncome,
                     Balance = totalIncome - totalExpense
