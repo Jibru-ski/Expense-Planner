@@ -25,8 +25,6 @@ namespace ExpensePlanner.Api.Controllers
         // public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         // {
         //     var users = await _context.Users
-        //         .Include(u => u.Accounts)
-        //         .Include(u => u.Transactions)
         //         .ToListAsync();
 
         //     return Ok(users);
@@ -36,8 +34,6 @@ namespace ExpensePlanner.Api.Controllers
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users
-                .Include(u => u.Accounts)
-                .Include(u => u.Transactions)
                 .FirstOrDefaultAsync(u => u.UserId == id);
 
             if (user == null)

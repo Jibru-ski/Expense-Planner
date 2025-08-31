@@ -24,25 +24,15 @@ namespace ExpensePlanner.Api.Controllers
 
         // GET: api/Accounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts(int id)
+        public async Task<ActionResult<IEnumerable<AccountSummaryDto>>> GetAccounts([FromQuery] int userId)
         {
             var accounts = await _context.Accounts
-                .Where(a => a.UserId == id)
-                .ToListAsync();
-
-            return Ok(accounts);
-        }
-
-        [HttpGet("summary/{id}")]
-        public async Task<ActionResult<AccountSummaryDto>> GetAccountSummary(int id)
-        {
-            var accounts = await _context.Accounts
-                .Include(a => a.Transactions)
+                .Where(a => a.UserId == userId)
                 .ToListAsync();
 
             if (!accounts.Any())
             {
-                return NotFound();
+                return NotFound("Accounts not found");
             }
 
             var summaries = accounts.Select(a =>

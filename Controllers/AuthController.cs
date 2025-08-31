@@ -41,6 +41,10 @@ namespace ExpensePlanner.Api.Controllers
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
             //Create a default account
             var account = new Account
             {
@@ -51,7 +55,7 @@ namespace ExpensePlanner.Api.Controllers
                 Balance = 0
             };
             
-            await _context.Users.AddAsync(user);
+            await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
 
             var UserDto = new UserDto
