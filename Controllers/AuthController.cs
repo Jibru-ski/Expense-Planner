@@ -54,7 +54,8 @@ namespace ExpensePlanner.Api.Controllers
                 IsActive = true,
                 TotalExpense = 0,
                 TotalIncome = 0,
-                Balance = 0
+                Balance = 0,
+                CreatedOn = DateTime.UtcNow
             };
 
             await _context.Accounts.AddAsync(account);

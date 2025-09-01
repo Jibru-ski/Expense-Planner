@@ -10,10 +10,11 @@ namespace ExpensePlanner.Api.Dtos.Account
         public int AccountId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
-        public bool IsActive  { get; set; }
-        public decimal TotalExpense { get; set; } 
-        public decimal TotalIncome { get; set; } 
+        public bool IsActive { get; set; }
+        public decimal TotalExpense { get; set; }
+        public decimal TotalIncome { get; set; }
         public decimal Balance { get; set; } 
+        public DateTime CreatedOn { get; set; }
 
     }
 }

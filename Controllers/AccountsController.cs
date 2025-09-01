@@ -53,7 +53,8 @@ namespace ExpensePlanner.Api.Controllers
                     Type = a.Type,
                     TotalExpense = totalExpense,
                     TotalIncome = totalIncome,
-                    Balance = totalIncome - totalExpense
+                    Balance = totalIncome - totalExpense,
+                    CreatedOn = a.CreatedOn
 
                 };
             }).ToList();

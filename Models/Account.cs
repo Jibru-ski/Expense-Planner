@@ -20,6 +20,7 @@ namespace ExpensePlanner.Api.Models
         public decimal TotalIncome { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Balance { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public User User { get; set; } = null!; // Navigation property to User
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>(); // Navigation property for transactions
