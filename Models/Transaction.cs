@@ -11,12 +11,13 @@ namespace ExpensePlanner.Api.Models
         public int TransactionId { get; set; }
         public int UserId { get; set; } // Foreign key to User
         public int AccountId { get; set; } // Foreign key to Account
+        public string Description { get; set; } = string.Empty;
         public TransactionType Type { get; set; } // Enum for transaction type (Income/Expense)
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
-        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
-        public string Description { get; set; } = string.Empty;
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime ModifiedOn { get; set; }
 
         public User User { get; set; } = null!; // Navigation property to User
         public Account Account { get; set; } = null!; // Navigation property to Account

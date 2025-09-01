@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExpensePlanner.Api.Data;
 using ExpensePlanner.Api.Models;
+using System.Transactions;
+using ExpensePlanner.Api.Dtos.Transaction;
 
 namespace ExpensePlanner.Api.Controllers
 {
@@ -23,37 +25,44 @@ namespace ExpensePlanner.Api.Controllers
 
         // GET: api/Transactions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactions([FromQuery] int? userId, TransactionDto dto)
         {
-            return await _context.Transactions.ToListAsync();
+            var query = _context.Transactions.AsQueryable();
+
+            if (userId != null)
+            {
+                query.Where(a => a.UserId == userId);
+            }
+
+            var transactions = await query
+            .Select(t => new TransactionDto
+            {
+                TransactionId = t.TransactionId,
+                Description = t.Description,
+                Type = t.Type,
+                Amount = t.Amount,
+                CreatedOn = t.CreatedOn
+            }).ToListAsync();
+
+            return Ok();
         }
 
-        // GET: api/Transactions/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Transaction>> GetTransaction(int id)
+        // PUT: api/Transactions/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTransaction(int id, UpdateTransactionDto dto)
         {
-            var transaction = await _context.Transactions.FindAsync(id);
+            var transaction =  await _context.Transactions.FindAsync(id);
 
             if (transaction == null)
             {
                 return NotFound();
             }
 
-            return transaction;
-        }
-
-        // PUT: api/Transactions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction(int id, Transaction transaction)
-        {
-            if (id != transaction.TransactionId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(transaction).State = EntityState.Modified;
-
+            transaction.ModifiedOn = DateTime.UtcNow;
+            transaction.Description = dto.Description;
+            transaction.Amount = dto.Amount;
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -76,12 +85,29 @@ namespace ExpensePlanner.Api.Controllers
         // POST: api/Transactions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
+        public async Task<ActionResult<TransactionDto>> CreateTransaction(CreateTransactionDto dto)
         {
+            var transaction = new Models.Transaction
+            {
+                Description = dto.Description,
+                Type = dto.Type,
+                Amount = dto.Amount,
+                CreatedOn = dto.CreatedOn                
+            };  
+
             _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransaction", new { id = transaction.TransactionId }, transaction);
+            var result = new TransactionDto
+            {
+                TransactionId = transaction.TransactionId,
+                Description = transaction.Description,
+                Type = transaction.Type,
+                Amount = transaction.Amount,
+                CreatedOn = transaction.CreatedOn
+            };
+
+            return CreatedAtAction(nameof(GetTransactions), new { id = transaction.TransactionId }, transaction);
         }
 
         // DELETE: api/Transactions/5
